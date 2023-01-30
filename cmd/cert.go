@@ -11,11 +11,8 @@ import (
 	"time"
 )
 
-// generateCert generate a self-signed CA for given organization
-// and sign certificate with the CA for given common name and dns names
-// it resurns the CA, certificate and private key in PEM format
 func generateCert(orgs, dnsNames []string, commonName string) (*bytes.Buffer, *bytes.Buffer, *bytes.Buffer, error) {
-	// init CA config
+
 	ca := &x509.Certificate{
 		SerialNumber:          big.NewInt(2022),
 		Subject:               pkix.Name{Organization: orgs},
@@ -87,4 +84,5 @@ func generateCert(orgs, dnsNames []string, commonName string) (*bytes.Buffer, *b
 	})
 
 	return caPEM, newCertPEM, newPrivateKeyPEM, nil
+
 }

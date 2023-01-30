@@ -42,6 +42,7 @@ func main() {
 	// flag.StringVar(&certFile, "tlsCertFile", "/etc/webhook/certs/cert.pem", "x509 Certificate file.")
 	// flag.StringVar(&keyFile, "tlsKeyFile", "/etc/webhook/certs/key.pem", "x509 private key file.")
 	flag.Parse()
+	// fmt.Println(os.Args)
 
 	dnsNames := []string{
 		webhookServiceName,
@@ -50,8 +51,10 @@ func main() {
 	}
 	commonName := webhookServiceName + "." + webhookNamespace + ".svc"
 
-	org := "morven.me"
+	org := "lhind.dlh.de"
+	// _, certPEM, certKeyPEM, err := generateCert([]string{org}, dnsNames, commonName)
 	caPEM, certPEM, certKeyPEM, err := generateCert([]string{org}, dnsNames, commonName)
+
 	if err != nil {
 		errorLogger.Fatalf("Failed to generate ca and certificate key pair: %v", err)
 	}

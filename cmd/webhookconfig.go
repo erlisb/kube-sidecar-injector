@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 	"os"
 	"reflect"
 
@@ -30,17 +32,18 @@ func createOrUpdateMutatingWebhookConfiguration(caPEM *bytes.Buffer, webhookServ
 	if err != nil {
 		return err
 	}
-	mutatingWebhookConfigV1Client := clientset.AdmissionregistrationV1()
 
+	mutatingWebhookConfigV1Client := clientset.AdmissionregistrationV1()
 	infoLogger.Printf("Creating or updating the mutatingwebhookconfiguration: %s", webhookConfigName)
 	fail := admissionregistrationv1.Fail
 	sideEffect := admissionregistrationv1.SideEffectClassNone
+
 	mutatingWebhookConfig := &admissionregistrationv1.MutatingWebhookConfiguration{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: webhookConfigName,
 		},
 		Webhooks: []admissionregistrationv1.MutatingWebhook{{
-			Name:                    "sidecar-injector.morven.me",
+			Name:                    "sidecar-injector.lhind.dlh.de",
 			AdmissionReviewVersions: []string{"v1", "v1beta1"},
 			SideEffects:             &sideEffect,
 			ClientConfig: admissionregistrationv1.WebhookClientConfig{
@@ -72,6 +75,13 @@ func createOrUpdateMutatingWebhookConfiguration(caPEM *bytes.Buffer, webhookServ
 			FailurePolicy: &fail,
 		}},
 	}
+
+	mutatewebhook, _ := json.Marshal(mutatingWebhookConfig)
+
+	fmt.Println("---------------------------------")
+	fmt.Println("New MutatingWebhookConfig Object")
+	fmt.Println("---------------------------------")
+	fmt.Println(string(mutatewebhook))
 
 	foundWebhookConfig, err := mutatingWebhookConfigV1Client.MutatingWebhookConfigurations().Get(context.TODO(), webhookConfigName, metav1.GetOptions{})
 	if err != nil && apierrors.IsNotFound(err) {

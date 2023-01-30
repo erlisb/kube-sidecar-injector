@@ -28,8 +28,8 @@ var ignoredNamespaces = []string{
 }
 
 const (
-	admissionWebhookAnnotationInjectKey = "sidecar-injector-webhook.morven.me/inject"
-	admissionWebhookAnnotationStatusKey = "sidecar-injector-webhook.morven.me/status"
+	admissionWebhookAnnotationInjectKey = "sidecar-injector-webhook.lhind.dlh.de/inject"
+	admissionWebhookAnnotationStatusKey = "sidecar-injector-webhook.lhind.dlh.de/status"
 )
 
 type WebhookServer struct {
@@ -193,6 +193,14 @@ func (whsvr *WebhookServer) mutate(ar *admissionv1.AdmissionReview) *admissionv1
 		}
 	}
 
+	admRequest, _ := json.Marshal(ar.Request)
+
+	fmt.Println("--------------------------------------")
+	fmt.Printf("AdmissionReview Request: \n")
+	fmt.Println("--------------------------------------")
+	
+	fmt.Println(string(admRequest))
+
 	infoLogger.Printf("AdmissionReview for Kind=%v, Namespace=%v Name=%v (%v) UID=%v patchOperation=%v UserInfo=%v",
 		req.Kind, req.Namespace, req.Name, pod.Name, req.UID, req.Operation, req.UserInfo)
 
@@ -213,6 +221,14 @@ func (whsvr *WebhookServer) mutate(ar *admissionv1.AdmissionReview) *admissionv1
 			},
 		}
 	}
+
+	
+	fmt.Println("--------------------------------------")
+	fmt.Printf("PatchBytes: \n")
+	fmt.Println("--------------------------------------")
+	fmt.Println(string(patchBytes))
+
+
 
 	infoLogger.Printf("AdmissionResponse: patch=%v\n", string(patchBytes))
 	return &admissionv1.AdmissionResponse{
@@ -247,6 +263,11 @@ func (whsvr *WebhookServer) serve(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println("--------------------------------------")
+	fmt.Printf("Request Body sent from the API Server: \n")
+	fmt.Println("--------------------------------------")
+	fmt.Println(string(body))
+
 	var admissionResponse *admissionv1.AdmissionResponse
 	ar := admissionv1.AdmissionReview{}
 	if _, _, err := deserializer.Decode(body, nil, &ar); err != nil {
@@ -259,6 +280,13 @@ func (whsvr *WebhookServer) serve(w http.ResponseWriter, r *http.Request) {
 	} else {
 		admissionResponse = whsvr.mutate(&ar)
 	}
+
+	admResponse, _ := json.Marshal(admissionResponse)
+
+	fmt.Println("--------------------------------------")
+	fmt.Printf("AdmissionResponse from WebHook Server: \n")
+	fmt.Println("--------------------------------------")
+	fmt.Println(string(admResponse))
 
 	admissionReview := admissionv1.AdmissionReview{
 		TypeMeta: metav1.TypeMeta{

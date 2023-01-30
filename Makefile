@@ -19,7 +19,7 @@ KUSTOMIZE_VERSION?=v3.5.4
 KUSTOMIZE_ARCHIVE_NAME?=kustomize_$(KUSTOMIZE_VERSION)_$(GOHOSTOS)_$(GOHOSTARCH).tar.gz
 kustomize_dir:=$(dir $(KUSTOMIZE))
 
-IMAGE = quay.io/morvencao/sidecar-injector:latest
+IMAGE = quay.io/erlis_balla/sidecar-injector:latest
 
 all: build
 .PHONY: all
@@ -61,13 +61,13 @@ test: fmt vet ## Run tests.
 build: fmt vet ## Build binary.
 	go build -o bin/sidecar-injector ./cmd/
 
-.PHONY: docker-build
-docker-build: test ## Build docker image.
-	docker build -t ${IMAGE} .
+.PHONY: nerdctl-build
+nerdctl-build: test ## Build nerdctl image.
+	nerdctl build --debug -t ${IMAGE} .
 
-.PHONY: docker-push
-docker-push: ## Push docker image.
-	docker push ${IMAGE}
+.PHONY: nerdctl-push
+nerdctl-push: ## Push nerdctl image.
+	nerdctl push --debug ${IMAGE}
 
 ##@ Deployment
 
