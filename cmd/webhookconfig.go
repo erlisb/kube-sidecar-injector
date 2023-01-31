@@ -114,5 +114,7 @@ func createOrUpdateMutatingWebhookConfiguration(caPEM *bytes.Buffer, webhookServ
 		infoLogger.Printf("The mutatingwebhookconfiguration: %s already exists and has no change", webhookConfigName)
 	}
 
+	// fmt.Println(mutatingWebhookConfig)
+
 	return nil
 }
