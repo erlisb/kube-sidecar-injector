@@ -15,8 +15,6 @@ spec:
         app: sidecar-injector
     spec:
       serviceAccountName: sidecar-injector
-      imagePullSecrets:
-        - name: sidecar-injector
       containers:
         - name: sidecar-injector
           image: sidecar-injector

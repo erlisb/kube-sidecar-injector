@@ -26,14 +26,15 @@ admissionregistration.k8s.io/v1beta1
 1. Build and push docker image:
 
 ```bash
-make docker-build docker-push IMAGE=quay.io/<your_quayio_username>/sidecar-injector:latest
+make docker-build docker-push IMAGE=erlisb/sidecar-injector:latest
 ```
 
 2. Deploy the kube-sidecar-injector to kubernetes cluster:
 
 ```bash
-make deploy IMAGE=quay.io/<your_quayio_username>/sidecar-injector:latest
+make deploy IMAGE=erlisb/sidecar-injector:latest
 ```
+
 
 3. Verify the kube-sidecar-injector is up and running:
 

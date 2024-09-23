@@ -4,8 +4,9 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -57,7 +58,7 @@ type patchOperation struct {
 }
 
 func loadConfig(configFile string) (*Config, error) {
-	data, err := ioutil.ReadFile(configFile)
+	data, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, err
 	}
@@ -198,7 +199,7 @@ func (whsvr *WebhookServer) mutate(ar *admissionv1.AdmissionReview) *admissionv1
 	fmt.Println("--------------------------------------")
 	fmt.Printf("AdmissionReview Request: \n")
 	fmt.Println("--------------------------------------")
-	
+
 	fmt.Println(string(admRequest))
 
 	infoLogger.Printf("AdmissionReview for Kind=%v, Namespace=%v Name=%v (%v) UID=%v patchOperation=%v UserInfo=%v",
@@ -222,13 +223,10 @@ func (whsvr *WebhookServer) mutate(ar *admissionv1.AdmissionReview) *admissionv1
 		}
 	}
 
-	
 	fmt.Println("--------------------------------------")
 	fmt.Printf("PatchBytes: \n")
 	fmt.Println("--------------------------------------")
 	fmt.Println(string(patchBytes))
-
-
 
 	infoLogger.Printf("AdmissionResponse: patch=%v\n", string(patchBytes))
 	return &admissionv1.AdmissionResponse{
@@ -245,7 +243,7 @@ func (whsvr *WebhookServer) mutate(ar *admissionv1.AdmissionReview) *admissionv1
 func (whsvr *WebhookServer) serve(w http.ResponseWriter, r *http.Request) {
 	var body []byte
 	if r.Body != nil {
-		if data, err := ioutil.ReadAll(r.Body); err == nil {
+		if data, err := io.ReadAll(r.Body); err == nil {
 			body = data
 		}
 	}

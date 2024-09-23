@@ -13,10 +13,6 @@ data:
         volumeMounts:
           - name: nginx-conf
             mountPath: /etc/nginx
-      - name: sidecar-alpine-2
-        image: alpine:latest
-        imagePullPolicy: IfNotPresent
-        command: ["/bin/sh", "-ec", "sleep infinity"]
   
     volumes:
       - name: nginx-conf

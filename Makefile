@@ -61,13 +61,13 @@ test: fmt vet ## Run tests.
 build: fmt vet ## Build binary.
 	go build -o bin/sidecar-injector ./cmd/
 
-.PHONY: nerdctl-build
-nerdctl-build: test ## Build nerdctl image.
-	nerdctl build --debug -t ${IMAGE} .
+.PHONY: docker-build
+docker-build: test ## Build docker image.
+	docker build -t ${IMAGE} .
 
-.PHONY: nerdctl-push
-nerdctl-push: ## Push nerdctl image.
-	nerdctl push --debug ${IMAGE}
+.PHONY: docker-push
+docker-push: ## Push docker image.
+	docker push ${IMAGE}
 
 ##@ Deployment
 
