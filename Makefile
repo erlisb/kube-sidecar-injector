@@ -19,7 +19,7 @@ KUSTOMIZE_VERSION?=v3.5.4
 KUSTOMIZE_ARCHIVE_NAME?=kustomize_$(KUSTOMIZE_VERSION)_$(GOHOSTOS)_$(GOHOSTARCH).tar.gz
 kustomize_dir:=$(dir $(KUSTOMIZE))
 
-IMAGE = quay.io/erlis_balla/sidecar-injector:latest
+IMAGE = erlisb/sidecar-injector:latest
 
 all: build
 .PHONY: all
@@ -98,3 +98,12 @@ GOBIN=$(PROJECT_DIR)/bin go get $(2) ;\
 rm -rf $$TMP_DIR ;\
 }
 endef
+
+##@ Cleanup
+.PHONY: clean
+clean: ## Cleanup resources.
+	$(KUBECTL) delete ns sidecar-injector
+	$(KUBECTL) delete mutatingwebhookconfiguration sidecar-injector-webhook
+	$(KUBECTL) delete -f deploy
+	rm -f cover.out
+

@@ -5,10 +5,10 @@ This repo is used for [a tutorial at Medium](https://medium.com/ibm-cloud/diving
 ## Prerequisites
 
 - [git](https://git-scm.com/downloads)
-- [go](https://golang.org/dl/) version v1.17+
+- [go](https://golang.org/dl/) version v1.22+
 - [docker](https://docs.docker.com/install/) version 19.03+
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) version v1.19+
-- Access to a Kubernetes v1.19+ cluster with the `admissionregistration.k8s.io/v1` API enabled. Verify that by the following command:
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) version v1.21+
+- Access to a Kubernetes v1.29+ cluster with the `admissionregistration.k8s.io/v1` API enabled. Verify that by the following command:
 
 ```
 kubectl api-versions | grep admissionregistration.k8s.io
@@ -23,20 +23,26 @@ admissionregistration.k8s.io/v1beta1
 
 ## Build and Deploy
 
-1. Build and push docker image:
+1. Login to your Docker Hub private Registry:
+
+```bash
+docker login -u erlib
+```
+
+2. Build and push docker image:
 
 ```bash
 make docker-build docker-push IMAGE=erlisb/sidecar-injector:latest
 ```
 
-2. Deploy the kube-sidecar-injector to kubernetes cluster:
+3. Deploy the kube-sidecar-injector to kubernetes cluster:
 
 ```bash
 make deploy IMAGE=erlisb/sidecar-injector:latest
 ```
 
 
-3. Verify the kube-sidecar-injector is up and running:
+4. Verify the kube-sidecar-injector is up and running:
 
 ```bash
 # kubectl -n sidecar-injector get pod
